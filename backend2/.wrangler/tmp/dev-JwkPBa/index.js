@@ -43,7 +43,7 @@ var __publicField = (obj, key, value) => {
   return value;
 };
 
-// .wrangler/tmp/bundle-gEWrjE/checked-fetch.js
+// .wrangler/tmp/bundle-GOF6Co/checked-fetch.js
 function checkURL(request3, init2) {
   const url = request3 instanceof URL ? request3 : new URL(
     (typeof request3 === "string" ? new Request(request3, init2) : request3).url
@@ -61,7 +61,7 @@ function checkURL(request3, init2) {
 }
 var urls;
 var init_checked_fetch = __esm({
-  ".wrangler/tmp/bundle-gEWrjE/checked-fetch.js"() {
+  ".wrangler/tmp/bundle-GOF6Co/checked-fetch.js"() {
     "use strict";
     urls = /* @__PURE__ */ new Set();
     globalThis.fetch = new Proxy(globalThis.fetch, {
@@ -30634,7 +30634,7 @@ var require_main = __commonJS({
   }
 });
 
-// .wrangler/tmp/bundle-gEWrjE/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-GOF6Co/middleware-loader.entry.ts
 init_checked_fetch();
 init_modules_watch_stub();
 init_virtual_unenv_global_polyfill_process();
@@ -30643,7 +30643,7 @@ init_virtual_unenv_global_polyfill_console();
 init_virtual_unenv_global_polyfill_set_immediate();
 init_virtual_unenv_global_polyfill_clear_immediate();
 
-// .wrangler/tmp/bundle-gEWrjE/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-GOF6Co/middleware-insertion-facade.js
 init_checked_fetch();
 init_modules_watch_stub();
 init_virtual_unenv_global_polyfill_process();
@@ -33637,7 +33637,7 @@ var jsonError = async (request3, env3, _ctx, middlewareCtx) => {
 };
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-gEWrjE/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-GOF6Co/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -33673,7 +33673,7 @@ function __facade_invoke__(request3, env3, ctx, dispatch, finalMiddleware) {
   ]);
 }
 
-// .wrangler/tmp/bundle-gEWrjE/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-GOF6Co/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

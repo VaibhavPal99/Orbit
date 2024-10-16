@@ -2,13 +2,14 @@ import { Hono } from 'hono';
 import { verify } from 'hono/jwt';
 import { PrismaClient } from '@prisma/client/edge';
 import { withAccelerate } from '@prisma/extension-accelerate';
-import { v2 as cloudinary } from 'cloudinary';
-
 
 export const postRouter = new Hono<{
     Bindings: {
         DATABASE_URL: string;
         SECRET_KEY: string;
+        CLOUDINARY_CLOUD_NAME: string;
+        CLOUDINARY_API_KEY: string;
+        CLOUDINARY_API_SECRET: string;
     };
     Variables: {
         userId: string;
@@ -16,7 +17,6 @@ export const postRouter = new Hono<{
 }>();
 
 postRouter.use('/*', async (c, next) => {
-  
     const authHeader = c.req.header("Authorization") || " ";
 
     try {
@@ -84,14 +84,34 @@ postRouter.post('/create', async (c) => {
         // Check if the image is in base64 format
         if (body.file) {
             try {
-              
-                const uploadedResponse = await cloudinary.uploader.upload(body.file,{
-                  resource_type: 'auto'
+                // Cloudinary upload URL
+                const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${c.env.CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+                // Create the form data for the request
+                const formData = new FormData();
+                formData.append('file', body.file); // Base64 image data
+                formData.append('upload_preset', 'ylxdtj0f'); // Replace with your actual upload preset
+
+                // Make the request using fetch
+                const response = await fetch(cloudinaryUrl, {
+                    method: 'POST',
+                    body: formData,
                 });
-                imgUrl = uploadedResponse.secure_url; // Get the secure URL of the uploaded image
-                console.log('Image uploaded successfully:', imgUrl); // Log the URL for verification
+
+                // Check if the request was successful
+                if (!response.ok) {
+                    const errorText = await response.text(); // Read the response text
+                    console.error('Error uploading image to Cloudinary:', errorText);
+                    c.status(500);
+                    return c.json({ msg: 'Failed to upload image to Cloudinary.' });
+                }
+
+                // Parse the response as JSON
+                const result: { secure_url: string } = await response.json();
+                imgUrl = result.secure_url;
+                console.log('Image uploaded successfully:', imgUrl);
+
             } catch (error) {
-           
                 console.error('Error uploading image to Cloudinary:', error);
                 return c.json({
                     msg: 'Failed to upload image to Cloudinary.'
@@ -118,7 +138,8 @@ postRouter.post('/create', async (c) => {
         });
 
     } catch (e) {
-        console.error('Error:', e); // Log the error for debugging
+        console.error('Error:', e);
+        c.status(500);
         return c.json({
             msg: "An exception has occurred"
         });
