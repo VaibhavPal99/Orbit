@@ -79,7 +79,7 @@ postRouter.post('/create', async (c) => {
             });
         }
 
-        let imgUrl = ''; // Initialize imgUrl
+        let imgUrl = '';
 
         // Check if the image is in base64 format
         if (body.file) {
@@ -145,3 +145,119 @@ postRouter.post('/create', async (c) => {
         });
     }
 });
+
+postRouter.get('/:id', async (c) => {
+
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
+
+    try{
+        const ID = c.req.param('id');
+        const post = await prisma.post.findUnique({
+            where: {
+                id: ID
+            }
+        })
+
+        if(!post){
+            c.status(401);
+            return c.json({
+                msg : "Post not found",
+            })
+        }
+        c.status(200);
+        return c.json({
+            post,
+        })
+    }catch(e){
+        console.log(e);
+        c.status(500);
+        return c.json({
+            msg: "Error while fetching Post"
+        })
+
+    }
+})
+
+postRouter.delete('/:id', async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
+    try{
+        const ID = c.req.param('id');
+        const currentUser = c.get('userId');
+        const post = await prisma.post.findUnique({
+            where: {
+                id : ID,
+            }
+        })
+
+        if(!post){
+            c.status(404);
+            return c.json({
+                msg: "Post not found"
+            })
+        }
+
+        if(post.PostedById.toString()!= currentUser.toString()){
+            c.status(401);
+            return c.json({ msg : "Unauthorized to delete post"});
+        }
+
+        if(post.img){
+            const imgId = post.img.split("/").pop()?.split(".")[0];
+            const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${c.env.CLOUDINARY_CLOUD_NAME}/image/destroy`;
+            if(imgId){
+                const body = new URLSearchParams();
+                body.append('public_id', imgId);
+                body.append('api_key', c.env.CLOUDINARY_API_KEY);
+                body.append('timestamp', Math.floor(Date.now() / 1000).toString());
+                body.append('signature', await generateSignature(imgId, c.env.CLOUDINARY_API_SECRET));
+        
+                // Make the request using fetch
+                const response = await fetch(cloudinaryUrl, {
+                    method: 'POST',
+                    body,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Cloudinary delete error:', errorText);
+                } else {
+                    console.log('Image deleted successfully from Cloudinary');
+                }   
+            }
+        }
+        
+        await prisma.post.delete({
+            where: { id: post.id },
+        });
+
+        c.status(200);
+        return c.json({ msg: 'Post deleted successfully.' });
+        
+    }catch(e){
+        console.error('Error deleting post:', e);
+        c.status(500);
+        return c.json({ msg: 'An error occurred while deleting the post.' });
+    }
+
+})
+
+const generateSignature = async (publicId: string, apiSecret: string): Promise<string> => {
+    const timestamp = Math.floor(Date.now() / 1000).toString();
+    const signatureBase = `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
+
+    const encoder = new TextEncoder();
+    const data = encoder.encode(signatureBase);
+
+    const hashBuffer = await crypto.subtle.digest('SHA-1', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+    return hashHex;
+};
