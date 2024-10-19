@@ -46,7 +46,7 @@ const FileUploadWithText = () => {
       const base64File = await convertFileToBase64(selectedFile);
       console.log(base64File);
 
-      const response = await axios.post('http://127.0.0.1:8787/api/v1/post/create', {
+      const response = await axios.post('https://backend2.vaibhavpal9935.workers.dev/api/v1/post/create', {
         file: base64File, // Send base64 file
         text: text, // Send text input
       }, {
