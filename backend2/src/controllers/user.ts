@@ -165,7 +165,7 @@ userRouter.post('/signin',async (c) => {
 })
 
 
-//Follow
+//Follow & Unfollow
 userRouter.post('/follow/:id',async (c) => {
 
    
