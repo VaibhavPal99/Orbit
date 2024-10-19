@@ -16,7 +16,7 @@ export const postRouter = new Hono<{
         userId: string;
     };
 }>();
-
+//Middleware for authentication
 postRouter.use('/*', async (c, next) => {
     const authHeader = c.req.header("Authorization") || " ";
 
@@ -39,7 +39,7 @@ postRouter.use('/*', async (c, next) => {
         });
     }
 });
-
+// creating a post 
 postRouter.post('/create', async (c) => {
     console.log("Reached /create endpoint");
 
@@ -146,7 +146,8 @@ postRouter.post('/create', async (c) => {
         });
     }
 });
-
+// for getting all the posts that were made by different users whom logged-in user follows
+// posts that are shown at the home page of a website are retrieved from here
 postRouter.get('/feed', async (c) => {
 
     const prisma = new PrismaClient({
@@ -197,6 +198,8 @@ postRouter.get('/feed', async (c) => {
     }
 })
 
+
+// to get a specific post made by any user just passing an id as a query parameter
 postRouter.get('/:id', async (c) => {
 
     const prisma = new PrismaClient({
@@ -234,7 +237,7 @@ postRouter.get('/:id', async (c) => {
 
     }
 })
-
+// delete a post (this can only be done by the user who has created that particular post)
 postRouter.delete('/:id', async (c) => {
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL,
@@ -317,6 +320,7 @@ const generateSignature = async (publicId: string, apiSecret: string): Promise<s
     return hashHex;
 };
 
+// like a post 
 postRouter.put('/like/:id', async (c) => {
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL,
@@ -386,6 +390,7 @@ postRouter.put('/like/:id', async (c) => {
     }
 })
 
+// reply to a post
 postRouter.put('/reply/:id', async (c) => {
 
     const prisma = new PrismaClient({
@@ -440,6 +445,7 @@ postRouter.put('/reply/:id', async (c) => {
     }
 })
 
+// get all the posts of a user by passing username as query parameter
 postRouter.get('/user/:username', async (c) => {
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL,
