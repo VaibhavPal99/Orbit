@@ -39,6 +39,7 @@ postRouter.use('/*', async (c, next) => {
         });
     }
 });
+
 // creating a post 
 postRouter.post('/create', async (c) => {
     console.log("Reached /create endpoint");

@@ -14,7 +14,7 @@ export const userRouter = new Hono<{
     }
 }>()
 
-
+//Middleware for Authentication
 userRouter.use('/*', async (c,next)=> {
     const authHeader = c.req.header("Authorization")|| " ";
     
@@ -46,7 +46,7 @@ userRouter.use('/*', async (c,next)=> {
       }
 })
 
-
+// to get profile of a specific user
 userRouter.get('/profile/:query', async (c) => {
 
     const prisma = new PrismaClient({
@@ -236,7 +236,7 @@ userRouter.post('/follow/:id',async (c) => {
     }    
 })
 
-
+//update user information
 userRouter.put('/update', async (c) => {
 
     const prisma = new PrismaClient({
