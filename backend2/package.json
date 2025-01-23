@@ -7,7 +7,7 @@
   "dependencies": {
     "@prisma/client": "^5.20.0",
     "@prisma/extension-accelerate": "^1.2.1",
-    "@vaibhavpal99/socialapp-common": "^1.0.0",
+    "@vaibhavpal99/common_social3": "^1.0.0",
     "cloudinary": "^2.5.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

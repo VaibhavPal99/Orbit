@@ -1,18 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "strict": true,
-    "skipLibCheck": true,
-    "lib": [
-      "ESNext"
-    ],
+    "target": "ESNext",                       // Use the latest ECMAScript features
+    "module": "ESNext",                       // ESNext module format
+    "moduleResolution": "Bundler",           // Module resolution for bundlers like Vite or Rollup
+    "strict": true,                           // Enable all strict type-checking options
+    "skipLibCheck": true,                     // Skip type checking of declaration files
+    "lib": ["ESNext"],                        // Use the ESNext library features
     "types": [
-      "@cloudflare/workers-types/2023-07-01",
-      "node"
+      "@cloudflare/workers-types",           // Cloudflare workers types
+      "node"                                 // Node.js types
     ],
-    "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx"
+    "jsx": "react-jsx",                       // Enable React JSX support
+    "jsxImportSource": "hono/jsx"            // Use Hono's JSX runtime
   },
+  "include": ["src/**/*"],                    // Include all TypeScript files in the `src` folder
+  "exclude": ["node_modules", "dist"]        // Exclude `node_modules` and `dist` folders
 }

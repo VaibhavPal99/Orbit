@@ -45,10 +45,12 @@ const FileUploadWithText = () => {
       // Convert the selected file to base64
       const base64File = await convertFileToBase64(selectedFile);
       console.log(base64File);
+	    const id = localStorage.getItem("userId");
 
       const response = await axios.post('https://backend2.vaibhavpal9935.workers.dev/api/v1/post/create', {
-        file: base64File, // Send base64 file
-        text: text, // Send text input
+        postedBy : id,
+        file : base64File, // Send base64 file
+        text : text, // Send text input
       }, {
         headers: {
           Authorization: localStorage.getItem("token"),

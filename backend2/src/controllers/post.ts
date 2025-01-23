@@ -3,6 +3,7 @@ import { verify } from 'hono/jwt';
 import { PrismaClient } from '@prisma/client/edge';
 import { withAccelerate } from '@prisma/extension-accelerate';
 import { link } from 'fs';
+import { PostSchema,ReplySchema } from '@vaibhavpal99/common_social3';
 
 export const postRouter = new Hono<{
     Bindings: {
@@ -51,6 +52,14 @@ postRouter.post('/create', async (c) => {
     try {
         const body = await c.req.json();
         console.log(body);
+
+        const {success} = PostSchema.safeParse(body);
+        if(!success){
+            c.status(411);
+            return c.json({
+                msg : "Incorrect inputs!"
+            })
+        }
 
         const ID = c.get('userId');
         const user = await prisma.user.findUnique({
@@ -174,7 +183,7 @@ postRouter.get('/feed', async (c) => {
     const followingIds = (await prisma.follow.findMany({
         where: { followerId: currentUser },
         select: { followingId: true },
-      })).map((f) => f.followingId);
+      })).map((f: { followingId: string }) => f.followingId);
 
       console.log(followingIds);
   
@@ -215,8 +224,16 @@ postRouter.get('/:id', async (c) => {
             },
             include: {
                 likes: true,
-                replies: true,
-              },
+                replies:{
+                    select :{
+                        id : true,
+                        text : true,
+                        postId : true,
+                        user : true,
+                        createdAt : true,
+                    }
+                }
+            },
         })
 
         if(!post){
@@ -226,9 +243,7 @@ postRouter.get('/:id', async (c) => {
             })
         }
         c.status(200);
-        return c.json({
-            post,
-        })
+        return c.json({post});
     }catch(e){
         console.log(e);
         c.status(500);
@@ -401,6 +416,14 @@ postRouter.put('/reply/:id', async (c) => {
     try{
         console.log("reached here");
         const body = await c.req.json();
+
+        const {success} = ReplySchema.safeParse(body);
+        if(!success){
+            c.status(411);
+            return c.json({
+                msg : "Incorrect inputs!",
+            })
+        }
         const postId = c.req.param('id');
         const currentUser = c.get('userId');
         const text = body.text;
@@ -488,4 +511,3 @@ postRouter.get('/user/:username', async (c) => {
 
     }
 })
-

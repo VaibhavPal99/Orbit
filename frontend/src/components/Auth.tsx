@@ -24,7 +24,8 @@ import { useNavigate } from 'react-router-dom';
 
       const jwt = response.data;
       console.log("Token before setting in localStorage:", jwt);
-      localStorage.setItem("token", jwt);
+      localStorage.setItem("token", jwt.token);
+      localStorage.setItem("userId", jwt.id);
    
       
 

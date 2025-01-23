@@ -1,7 +1,9 @@
 import { Hono } from 'hono'
 import { decode, sign, verify } from 'hono/jwt'
 import { Prisma, PrismaClient } from '@prisma/client/edge';
-import { withAccelerate } from '@prisma/extension-accelerate';
+import { withAccelerate } from '@prisma/extension-accelerate'
+import { SignupUserSchema, LoginUserSchema, UpdateUserSchema } from '@vaibhavpal99/common_social3';
+
 
 
 export const userRouter = new Hono<{
@@ -62,6 +64,18 @@ userRouter.get('/profile/:query', async (c) => {
                     {id: query},
                     {username: query}
                 ]
+            },
+            select : {
+                id:true,
+                name:true,
+                username:true,
+                email:true,
+                password:true,
+                bio:true,
+                isFrozen:true,
+                profilePic:true,
+                followers:true,
+                followings:true,
             }
         })
 
@@ -71,16 +85,7 @@ userRouter.get('/profile/:query', async (c) => {
             })
         }
 
-        return c.json({
-            id: user.id,
-            name:user.name,
-            username: user.username,
-            email: user.email,
-            password: user.password,
-            bio:user.bio,
-            isFrozen: user.isFrozen,
-            profilePic: user.profilePic,
-        })
+        return c.json(user);
 
     }catch(e){
         return c.json({
@@ -96,6 +101,16 @@ userRouter.get('/profile/:query', async (c) => {
 userRouter.post('/signup', async (c) =>{
 
     const body = await c.req.json();
+    const {success} = SignupUserSchema.safeParse(body);
+
+    if(!success) {
+        c.status(411);
+        return c.json({
+            msg: "Inputs are incorrect!",
+        })
+    }
+
+
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate())
@@ -117,7 +132,19 @@ userRouter.post('/signup', async (c) =>{
         id: user.id,
         username: user.username,
     },c.env.SECRET_KEY)
-    return c.text(jwt);
+
+
+    return c.json({
+        id: user.id,
+        name:user.name,
+        username: user.username,
+        email: user.email,
+        password: user.password,
+        bio:user.bio,
+        isFrozen: user.isFrozen,
+        profilePic: user.profilePic,
+        token : jwt
+    })
 
     }catch(e){
         console.log(e);
@@ -131,6 +158,14 @@ userRouter.post('/signup', async (c) =>{
 userRouter.post('/signin',async (c) => {
 
     const body = await c.req.json();
+    const {success} = LoginUserSchema.safeParse(body);
+
+    if(!success){
+        c.status(411);
+        return c.json({
+            msg : "Incorrect Inputs!",
+        })
+    }
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate())
@@ -154,7 +189,18 @@ userRouter.post('/signin',async (c) => {
         id: user.id,
         username: user.username,
     },c.env.SECRET_KEY)
-    return c.text(jwt);
+    
+    return c.json({
+        id: user.id,
+        name:user.name,
+        username: user.username,
+        email: user.email,
+        password: user.password,
+        bio:user.bio,
+        isFrozen: user.isFrozen,
+        profilePic: user.profilePic,
+        token : jwt
+    })
 
     }catch(e){
         console.log(e);
@@ -246,6 +292,14 @@ userRouter.put('/update', async (c) => {
     const body = await c.req.json();
     const ID = c.get('userId');
 
+    const {success} = UpdateUserSchema.safeParse(body);
+    if(!success){
+        c.status(411);
+        return c.json({
+            msg : "Incorrect inputs!"
+        })
+    }
+ 
 
     const detail = await prisma.user.update({
         where: {
@@ -292,6 +346,94 @@ userRouter.put('/freeze', async (c) => {
         return c.json({
             msg : "An error has occured"
         })
+    }
+})
+
+userRouter.get('/suggested', async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    const userId = c.get('userId'); // Assuming `userId` is available in the context
+
+    // Step 1: Fetch the IDs of users followed by the current user
+    const usersFollowedByYou = await prisma.follow.findMany({
+      where: {
+        followerId: userId,
+      },
+      select: {
+        followingId: true, // Select only the IDs of users being followed
+      },
+    });
+
+    // Extract the followed user IDs into an array
+    const followedUserIds = usersFollowedByYou.map((user) => user.followingId);
+
+    // Step 2: Fetch a list of 10 users excluding the current user and followed users
+    const suggestedUsers = await prisma.user.findMany({
+      where: {
+        id: {
+          notIn: [userId, ...followedUserIds], // Exclude the current user and followed users
+        },
+      },
+      take: 5, // Limit the result to 10 users
+      orderBy: {
+        createdAt: 'desc', // Optionally, sort by a specific field like `createdAt`
+      },
+      select: {
+        id: true,
+        name: true,
+        username: true, // Include fields you want to return
+        profilePic: true, // Example field
+      },
+    });
+
+    // Step 3: Return the suggested users
+    return c.json(suggestedUsers);
+  } catch (error) {
+    console.error(error);
+    return c.json({ error: 'Failed to fetch suggested users' }, 500);
+  } finally {
+    await prisma.$disconnect();
+  }
+});
+
+
+userRouter.get('/bulk', async (c) => {
+
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
+
+    const query = c.req.query();
+
+    const filter = query.filter || "";
+    try{
+        const users = await prisma.user.findMany({
+            where: {
+              username: {
+                contains: filter, // Use 'contains' for case-insensitive partial matching
+                mode: 'insensitive', // This makes the filter case-insensitive
+              },
+            },
+            select: {
+              id: true,
+              name : true,
+              username: true,
+              email: true, 
+              profilePic: true,
+              bio: true,
+              isFrozen: true,
+              followers: true,
+              followings: true,
+            },
+          });
+
+        return c.json(users, 200);
+    }catch(e){
+        console.error(e); // Log error for debugging
+        return c.json({ error: "No User Found" }, 500);
     }
 })
 
