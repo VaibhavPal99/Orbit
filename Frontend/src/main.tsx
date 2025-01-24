@@ -1,13 +1,18 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
-import { RecoilRoot } from 'recoil'
+import { StrictMode } from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom'; // Import BrowserRouter
+import { RecoilRoot } from 'recoil'; // Import RecoilRoot
+import App from './App';
 
-createRoot(document.getElementById('root')!).render(
-  <RecoilRoot>
-    <StrictMode>
-      <App />
-    </StrictMode>
-  </RecoilRoot>,
-)
+
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+
+root.render(
+  <StrictMode>
+    <BrowserRouter> {/* Wrap App with BrowserRouter */}
+      <RecoilRoot>
+        <App />
+      </RecoilRoot>
+    </BrowserRouter>
+  </StrictMode>
+);

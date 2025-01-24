@@ -7,9 +7,11 @@ import { FiSettings } from "react-icons/fi";
 import { FiLogOut } from "react-icons/fi";
 import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
+import useLogout from "../hooks/useLogout";
 
 export const Header = () => {
   const user = useRecoilValue(userAtom);
+  const logout = useLogout();
   
   
   return (
@@ -71,6 +73,7 @@ export const Header = () => {
             <button
               className="flex flex-col items-center text-red-500 hover:text-red-600 transition-colors"
               title="Log Out"
+              onClick={logout}
             >
               <FiLogOut className="text-xl" />
               <span className="text-xs">Log Out</span>

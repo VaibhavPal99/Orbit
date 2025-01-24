@@ -449,3 +449,15 @@ userRouter.get('/bulk', async (c) => {
 })
 
 
+userRouter.post('/logout', async (c) => {
+    try {
+      // Set the JWT cookie to expire immediately to "log out" the user
+      c.header('Set-Cookie', 'jwt=; HttpOnly; Path=/; Max-Age=0; Secure; SameSite=Strict');
+      
+      return c.json({ message: 'User logged out successfully' }, 200);
+    } catch (err) {
+      console.error(err);
+      return c.json({ error: 'An error occurred while logging out' }, 500);
+    }
+  });
+  

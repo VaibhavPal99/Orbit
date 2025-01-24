@@ -1,5 +1,5 @@
 
-import {Routes, Route, BrowserRouter, Navigate} from 'react-router-dom'
+import {Routes, Route, Navigate, useNavigate} from 'react-router-dom'
 import {Auth} from './pages/Auth';
 import { Home } from './pages/Home';
 import { UserPage } from './pages/UserPage';
@@ -8,15 +8,26 @@ import userAtom from './atoms/userAtom';
 import Header from './component/Header';
 import { PostPage } from './pages/PostPage';
 import FollowerAndFollowingPage from './pages/FollowerAndFollowingPage';
+import { useEffect } from 'react';
+import './index.css'; // or the appropriate path to your CSS file
+
 
 
 
 const App = () => {
   const user = useRecoilValue(userAtom);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/auth');  // Redirect to login page if no token
+    }
+  }, [navigate]);
 
   return (
     <div>
-        <BrowserRouter>
+       
         <Header></Header>
       <Routes>
             <Route path="/auth" element={<Auth></Auth>}> </Route>
@@ -48,7 +59,7 @@ const App = () => {
               }
             />
       </Routes>
-        </BrowserRouter>
+        
     </div>
   )
 }
