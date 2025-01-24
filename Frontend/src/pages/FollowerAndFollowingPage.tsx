@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CircularProgress, Typography, Box, Button } from "@mui/material";
+import { CircularProgress, Typography, Box} from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import Followers from "../component/Followers";

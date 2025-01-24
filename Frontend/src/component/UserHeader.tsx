@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { CgMoreO } from "react-icons/cg";
 import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";

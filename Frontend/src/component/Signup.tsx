@@ -1,5 +1,5 @@
 import { SignupUserInput } from "@vaibhavpal99/common_social3";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent,useState } from "react";
 import { useSetRecoilState } from "recoil";
 import {authScreenAtom} from "../atoms/authAtom";
 import { BACKEND_URL } from "../config";

@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState} from "recoil";
 import SuggestedUsers from "../component/SuggestedUsers";
 import useGetBulkUsersDetails from "../hooks/useGetBulkUsersDetails";
 import { useEffect, useState } from "react";
@@ -8,13 +8,13 @@ import { PostType } from "../types/types";
 import { CircularProgress } from "@mui/material";
 import Post from "../component/Post";
 import postsAtom from "../atoms/postsAtom";
-import userAtom from "../atoms/userAtom";
+
 
 export const Home = () => {
     const { bulkUser } = useGetBulkUsersDetails();
     const [posts, setPosts] = useRecoilState(postsAtom);
     const [loading, setLoading] = useState<boolean>(true);
-    const currentUser = useRecoilValue(userAtom);
+    
 
 
     useEffect(() => {
