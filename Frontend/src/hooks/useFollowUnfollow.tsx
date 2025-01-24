@@ -12,10 +12,11 @@
       
         const [updating, setUpdating] = useState<boolean>(false);
         const [following, setFollowing] = useState<boolean>(
-            Array.isArray(user.followers) && user.followers.includes(currentUser?.id)
+            Array.isArray(user.followers) &&
+            user.followers.some(follower => follower.followerId === currentUser.user.id)
         );
-        
 
+        
         const [snackbar, setSnackbar] = useState({
             open: false,
             message: `Followed ${user.name}`,
@@ -89,7 +90,6 @@
             }
         };
         
-
         return {
             handleFollowUnfollow,
             updating,

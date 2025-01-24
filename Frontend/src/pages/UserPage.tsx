@@ -61,7 +61,7 @@ export const UserPage: React.FC = () => {
     );
   }
 
-  console.log("Posts Type:", typeof posts, "Posts:", posts);
+ 
 
   return (
     <div>

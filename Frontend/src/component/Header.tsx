@@ -58,7 +58,7 @@ export const Header = () => {
             </Link>
 
             <Link
-              to={`/${user.username}`}
+              to={`/${user.user.username}`}
               className="flex flex-col items-center text-gray-600 hover:text-blue-500 transition-colors"
             >
               <RxAvatar className="text-xl" />

@@ -6,6 +6,7 @@ import userAtom from "../atoms/userAtom";
 import useFollowUnfollow from "../hooks/useFollowUnfollow";
 import { IUserHeaderProps } from "../types/types";
 import { Avatar } from "@mui/material";
+import CreatePost from "./CreatePost";
 
 export const UserHeader = ({ user }: IUserHeaderProps) => {
   const currentUser = useRecoilValue(userAtom);
@@ -35,6 +36,7 @@ export const UserHeader = ({ user }: IUserHeaderProps) => {
       children: initials,
     };
   }
+  
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg max-w-3xl mx-auto mt-10 space-y-6">
@@ -62,7 +64,7 @@ export const UserHeader = ({ user }: IUserHeaderProps) => {
 
       {/* Buttons Section */}
       <div>
-        {currentUser?.id === user.id ? (
+        {currentUser.user.id === user.id ? (
           <Link to="/update">
             <button className="px-5 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition duration-300">
               Update Profile
@@ -100,9 +102,12 @@ export const UserHeader = ({ user }: IUserHeaderProps) => {
             <p>{Array.isArray(user?.followings) ? user.followings.length : 0} followings</p>
           </Link>
         </div>
-
+        
+        
         {/* More Options */}
+        
         <div className="relative">
+          <div className=""><CreatePost></CreatePost></div>
           <CgMoreO
             size={24}
             className="cursor-pointer text-gray-600 hover:text-blue-600"

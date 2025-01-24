@@ -7,6 +7,8 @@ import { useRecoilValue } from 'recoil';
 import userAtom from './atoms/userAtom';
 import Header from './component/Header';
 import { PostPage } from './pages/PostPage';
+import FollowerAndFollowingPage from './pages/FollowerAndFollowingPage';
+
 
 
 const App = () => {
@@ -32,6 +34,18 @@ const App = () => {
             <Route
               path="/:username/post/:pid"
               element={user ? <PostPage /> : <Navigate to={"/auth"} />}
+            />
+            <Route
+              path={`/:username/followings`}
+              element={
+                user ? <FollowerAndFollowingPage /> : <Navigate to="/auth" />
+              }
+            />
+            <Route
+              path={`/:username/followers`}
+              element={
+                user ? <FollowerAndFollowingPage /> : <Navigate to="/auth" />
+              }
             />
       </Routes>
         </BrowserRouter>

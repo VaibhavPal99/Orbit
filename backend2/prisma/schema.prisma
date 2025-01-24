@@ -18,8 +18,8 @@ model User {
   isFrozen         Boolean
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
-  followers        Follow[]  @relation("Followers")
-  followings       Follow[]  @relation("Following")
+  followers        Follow[]  @relation("Following")
+  followings       Follow[]  @relation("Followers")
   Posts            Post[]    @relation("PostsMade")
   likedPosts       Like[] // Explicit relation for posts liked by this user
   Reply            Reply[]

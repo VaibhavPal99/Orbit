@@ -125,6 +125,19 @@ userRouter.post('/signup', async (c) =>{
             profilePic: body.profilePic|| " ", // Required
             bio: body.bio || " ",        // Optional
             isFrozen: body.isFrozen || false
+        },
+        select :{
+           id : true,
+           name : true,
+           username : true,
+           email : true,
+           password : true,
+           bio : true,
+           isFrozen : true,
+           profilePic : true,
+           followers: true,
+           followings : true,
+
         }
 
     })
@@ -135,14 +148,7 @@ userRouter.post('/signup', async (c) =>{
 
 
     return c.json({
-        id: user.id,
-        name:user.name,
-        username: user.username,
-        email: user.email,
-        password: user.password,
-        bio:user.bio,
-        isFrozen: user.isFrozen,
-        profilePic: user.profilePic,
+        user,
         token : jwt
     })
 
@@ -175,6 +181,18 @@ userRouter.post('/signin',async (c) => {
         where: {
             username: body.username,
             password: body.password 
+        },
+        select :{
+            id : true,
+            name : true,
+            username : true,
+            email : true,
+            password : true,
+            bio : true,
+            isFrozen : true,
+            profilePic : true,
+            followers: true,
+            followings : true,
         }
 
     })
@@ -191,14 +209,7 @@ userRouter.post('/signin',async (c) => {
     },c.env.SECRET_KEY)
     
     return c.json({
-        id: user.id,
-        name:user.name,
-        username: user.username,
-        email: user.email,
-        password: user.password,
-        bio:user.bio,
-        isFrozen: user.isFrozen,
-        profilePic: user.profilePic,
+        user,
         token : jwt
     })
 

@@ -13,7 +13,7 @@ const Icons = ({ post }: IconsProps) => {
     const user = useRecoilValue(userAtom);
     const [posts, setPosts] = useRecoilState(postsAtom);
     const [liked, setLiked] = useState<boolean>(
-        post.likes.some((like) => like.userId === user?.id)
+        post.likes.some((like) => like.userId === user.user?.id)
     );
     const [isLiking, setIsLiking] = useState<boolean>(false);
     const [isReplying, setIsReplying] = useState<boolean>(false);

@@ -12,19 +12,19 @@ export interface IUser{
     bio : string;
     isFrozen : boolean;
     createdAt : string;
-    followers : string[];
-    followings : string[];
+    followers : { id: string; followerId: string; followingId: string }[];
+    followings : { id: string; followerId: string; followingId: string }[];
 }
 
 const useGetBulkUsersDetails = () => {
 
     const [bulkUser, setBulkUser] = useState<IUser[]>([]);
-    const [loading,setLoading] = useState<boolean>();
+    const [bulkUserLoading,setBulkUserLoading] = useState<boolean>();
 
     useEffect(()=> {
         const getBulkUsersDetails = async () => {
             try{
-                setLoading(true);
+                setBulkUserLoading(true);
                 const res = await axios.get(`${BACKEND_URL}/api/v1/user/bulk`,{
                     headers: {
                         Authorization :localStorage.getItem("token")
@@ -35,14 +35,14 @@ const useGetBulkUsersDetails = () => {
             }catch(e){
                 console.log("An error Occurred", e);
             }finally{
-                setLoading(false);
+                setBulkUserLoading(false);
             }
         }
         getBulkUsersDetails();
     },[])
 
     return {
-        loading,
+        bulkUserLoading,
         bulkUser
     }
 }
