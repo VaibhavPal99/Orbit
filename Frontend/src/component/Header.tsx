@@ -21,7 +21,7 @@ export const Header = () => {
           {/* Left: Logo */}
           <div className="flex items-center">
             <div className="text-blue-700 text-3xl font-bold">
-              ChatterSpace
+              Orbit
             </div>
           </div>
 

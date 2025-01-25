@@ -50,8 +50,8 @@ const Icons = ({ post }: IconsProps) => {
             const updatedPosts = posts.map((p) => {
                 if (p.id === post.id) {
                     const updatedLikes = liked
-                        ? p.likes.filter((id) => id !== user.id)
-                        : [...p.likes, user.id];
+                        ? p.likes.filter((id) => id !== user.user.id)
+                        : [...p.likes, user.user.id];
                     return { ...p, likes: updatedLikes };
                 }
                 return p;
