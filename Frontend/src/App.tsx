@@ -10,6 +10,7 @@ import { PostPage } from './pages/PostPage';
 import FollowerAndFollowingPage from './pages/FollowerAndFollowingPage';
 import { useEffect } from 'react';
 import './index.css'; // or the appropriate path to your CSS file
+import { UpdateProfilePage } from './pages/UpdateProfilePage';
 
 
 
@@ -31,6 +32,10 @@ const App = () => {
         <Header></Header>
       <Routes>
             <Route path="/auth" element={<Auth></Auth>}> </Route>
+            <Route
+              path="/update"
+              element={user ? <UpdateProfilePage /> : <Navigate to="/auth" />}
+            />
             <Route path="/" element={<Home></Home>}></Route>
             <Route path="/:username" element= { user ? 
                 (

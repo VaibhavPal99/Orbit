@@ -8,7 +8,7 @@ const app = new Hono();
 
 // CORS configuration
 const corsOptions = {
-  origin: ['https://chatterspace-mauve.vercel.app', 'http://localhost:5173'], // Allow requests from the frontend
+  origin: ['https://orbit-blond.vercel.app', 'http://localhost:5173'], // Allow requests from the frontend
   credentials: true, // Allow credentials (cookies)
 };
 

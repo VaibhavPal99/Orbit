@@ -10,6 +10,9 @@ export const userRouter = new Hono<{
     Bindings: {
         DATABASE_URL: string;
         SECRET_KEY : string;
+        CLOUDINARY_CLOUD_NAME: string;
+        CLOUDINARY_API_KEY: string;
+        CLOUDINARY_API_SECRET: string;
     }
     Variables: {
         userId: string
@@ -310,25 +313,81 @@ userRouter.put('/update', async (c) => {
             msg : "Incorrect inputs!"
         })
     }
- 
+    let imgUrl = '';
+    
+    if(body.profilePic && body.profilePic.trim() !== ""){
+        try{
+            const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${c.env.CLOUDINARY_CLOUD_NAME}/image/upload`;
+            const formData = new FormData();
+            formData.append('file', body.profilePic); 
+            formData.append('upload_preset', 'ylxdtj0f');
 
-    const detail = await prisma.user.update({
-        where: {
-            id: ID,
+            const response = await fetch(cloudinaryUrl, {
+                method : 'POST',
+                body : formData,
+            });
+            if (!response.ok) {
+                const errorText = await response.text(); // Read the response text
+                console.error('Error uploading image to Cloudinary:', errorText);
+                c.status(500);
+                return c.json({ msg: 'Failed to upload image to Cloudinary.' });
+            }
+
+            // Parse the response as JSON
+            const result: { secure_url: string } = await response.json();
+            imgUrl = result.secure_url;
+            console.log('Image uploaded successfully:', imgUrl);
+        }catch(e){
+            console.error('Error uploading image to Cloudinary:', e);
+                return c.json({
+                    msg: 'Failed to upload image to Cloudinary.'
+                });
+        }
+    }
+
+    const updateData: any = {};
+    if (body.name && body.name.trim() !== "") updateData.name = body.name;
+    if (body.password && body.password.trim() !== "") updateData.password = body.password;
+    if (body.username && body.username.trim() !== "") updateData.username = body.username;
+    if (body.email && body.email.trim() !== "") updateData.email = body.email;
+    if (body.bio && body.bio.trim() !== "") updateData.bio = body.bio;
+    if (imgUrl !== "") updateData.profilePic = imgUrl;
+
+    // Perform the update only if there are changes
+    let detail;
+    if (Object.keys(updateData).length > 0) {
+        detail = await prisma.user.update({
+            where: {
+                id: ID,
+            },
+            data: updateData,
+        });
+    } else {
+        return c.json({
+            msg: "No changes detected to update.",
+        });
+    }
+
+    const user = await prisma.user.findUnique({
+        where : {
+            id : detail.id,
         },
-        data : {
-            name: body.name,
-            password:body.password,
-            username: body.username,
-            email: body.email,
-            profilePic: body.profilePic,
-            bio: body.bio,
+        select : {
+            id : true,
+            name : true,
+            username : true,
+            email : true,
+            password : true,
+            bio : true,
+            isFrozen : true,
+            profilePic : true,
+            followers: true,
+            followings : true,
         }
     })
     
     return c.json({
-        id: detail.id,
-        msg: "Profile Updated"
+        user
     })
 })
 
