@@ -83,7 +83,7 @@ const CreatePost = () => {
       setLoading(false);
     }
   };
-  console.log("a",username); console.log("b",user.user.username);
+  
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const inputText = e.target.value;

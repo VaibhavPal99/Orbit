@@ -11,6 +11,7 @@ import FollowerAndFollowingPage from './pages/FollowerAndFollowingPage';
 import { useEffect } from 'react';
 import './index.css'; // or the appropriate path to your CSS file
 import { UpdateProfilePage } from './pages/UpdateProfilePage';
+import SearchPage from './pages/SearchPage';
 
 
 
@@ -62,6 +63,10 @@ const App = () => {
               element={
                 user ? <FollowerAndFollowingPage /> : <Navigate to="/auth" />
               }
+            />
+            <Route
+              path="/search"
+              element={user ? <SearchPage /> : <Navigate to={"/auth"} />}
             />
       </Routes>
         
