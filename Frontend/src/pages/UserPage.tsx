@@ -37,12 +37,11 @@ export const UserPage: React.FC = () => {
           console.error("An error has occurred while fetching posts.");
           setPosts([]);
         } else {
-          // Ensure posts are stored as an array
           setPosts(Array.isArray(data.posts) ? data.posts : []);
         }
       } catch (error) {
         console.error("Error fetching posts:", error);
-        setPosts([]); // Fallback to empty array
+        setPosts([]);
       } finally {
         setFetchingPosts(false);
       }
@@ -53,31 +52,37 @@ export const UserPage: React.FC = () => {
 
   if (!user) {
     return loading ? (
-      <div>
+      <div className="flex justify-center items-center h-32">
         <CircularProgress />
       </div>
     ) : (
-      <div>User not found!</div>
+      <div className="text-center text-red-500 text-lg font-semibold">
+        User not found!
+      </div>
     );
   }
 
- 
-
   return (
-    <div>
-      <div>
+    <div className="max-w-2xl mx-auto p-4">
+      <div className="mb-6">
         <UserHeader user={user} />
       </div>
-      <div>
-        {!fetchingPosts && posts?.length === 0 && <h1>User has no posts.</h1>}
+      <div className="space-y-6">
+        {!fetchingPosts && posts?.length === 0 && (
+          <h1 className="text-center text-gray-500 text-lg font-medium">
+            User has no posts.
+          </h1>
+        )}
         {fetchingPosts && (
-          <div>
+          <div className="flex justify-center items-center h-20">
             <CircularProgress />
           </div>
         )}
         {Array.isArray(posts) &&
           posts.map((post) => (
-            <Post key={post.id} post={post} userId={post.PostedById} />
+            <div key={post.id} className="w-full">
+              <Post post={post} userId={post.PostedById} />
+            </div>
           ))}
       </div>
     </div>

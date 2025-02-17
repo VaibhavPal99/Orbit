@@ -3,6 +3,7 @@ import { userRouter } from './controllers/user';
 import { postRouter } from './controllers/post';
 import { v2 as cloudinary } from 'cloudinary';
 import { cors } from 'hono/cors';
+import { messageRouter } from './controllers/message';
 
 const app = new Hono();
 
@@ -17,6 +18,7 @@ app.use('/*', cors(corsOptions)); // Apply the CORS middleware globally
 // Define routes
 app.route("/api/v1/user", userRouter);
 app.route("/api/v1/post", postRouter);
+app.route("/api/v1/message", messageRouter);
 
 // Initialize cloudinary
 cloudinary.config({

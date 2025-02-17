@@ -48,7 +48,7 @@ const Post = ({ post, userId }: UserPagePostProps) => {
       });
       setPosts(posts.filter((p) => p.id !== post.id));
     } catch (error) {
-      // Error handling
+      console.error("Error deleting post:", error);
     }
   };
 
@@ -106,7 +106,7 @@ const Post = ({ post, userId }: UserPagePostProps) => {
               <span className="text-xs text-gray-500">
                 {formatDistanceToNow(new Date(post.createdAt))} ago
               </span>
-              {currentUser?.id === user.id && (
+              {currentUser.user.id === user.id && (
                 <button
                   className="text-red-500 text-xs"
                   onClick={handleDeletePost}
@@ -120,15 +120,19 @@ const Post = ({ post, userId }: UserPagePostProps) => {
           {/* Post Content */}
           {post.text && <p className="text-sm">{post.text}</p>}
           {post.img && (
-            <div className="rounded overflow-hidden border border-gray-300">
-              <img src={post.img} alt="Post" className="w-full" />
+            <div className="flex justify-center">
+              <img
+                src={post.img}
+                alt="Post"
+                className="w-[75%] rounded-lg"
+                style={{ display: "block" }} // Ensures no extra box
+              />
             </div>
           )}
 
           {/* Icons */}
           <div className="flex gap-3 mt-1">
             <Icons post={post} />
-            
           </div>
         </div>
       </div>

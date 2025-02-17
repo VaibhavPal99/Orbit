@@ -13,14 +13,13 @@ export const Header = () => {
   const user = useRecoilValue(userAtom);
   const logout = useLogout();
   
-  
   return (
     <>
       {user && (
-        <div className="bg-white shadow-md border-b sticky top-0 z-50 flex items-center justify-between px-6 py-3">
+        <div className="bg-gradient-to-r from-gray-800 via-gray-900 to-black shadow-lg sticky top-0 z-50 flex items-center justify-between px-8 py-4">
           {/* Left: Logo */}
-          <div className="flex items-center">
-            <div className="text-blue-700 text-3xl font-bold">
+          <div className="flex items-center space-x-2">
+            <div className="text-white text-3xl font-semibold tracking-tight hover:text-gray-300 cursor-pointer">
               Orbit
             </div>
           </div>
@@ -29,58 +28,58 @@ export const Header = () => {
           <div className="flex items-center space-x-6">
             <Link
               to="/"
-              className="flex flex-col items-center text-gray-600 hover:text-blue-500 transition-colors"
+              className="flex flex-col items-center text-white hover:text-blue-400 transition-all duration-200"
             >
-              <AiFillHome className="text-xl" />
-              <span className="text-xs">Home</span>
+              <AiFillHome className="text-2xl" />
+              <span className="text-xs mt-1">Home</span>
             </Link>
 
             <Link
               to="/search"
-              className="flex flex-col items-center text-gray-600 hover:text-blue-500 transition-colors"
+              className="flex flex-col items-center text-white hover:text-blue-400 transition-all duration-200"
             >
-              <FiSearch className="text-xl" />
-              <span className="text-xs">Search</span>
+              <FiSearch className="text-2xl" />
+              <span className="text-xs mt-1">Search</span>
             </Link>
 
             <Link
               to="/chat"
-              className="flex flex-col items-center text-gray-600 hover:text-blue-500 transition-colors"
+              className="flex flex-col items-center text-white hover:text-blue-400 transition-all duration-200"
             >
-              <LuMessagesSquare className="text-xl" />
-              <span className="text-xs">Messages</span>
+              <LuMessagesSquare className="text-2xl" />
+              <span className="text-xs mt-1">Messages</span>
             </Link>
 
             <Link
               to="/settings"
-              className="flex flex-col items-center text-gray-600 hover:text-blue-500 transition-colors"
+              className="flex flex-col items-center text-white hover:text-blue-400 transition-all duration-200"
             >
-              <FiSettings className="text-xl" />
-              <span className="text-xs">Settings</span>
+              <FiSettings className="text-2xl" />
+              <span className="text-xs mt-1">Settings</span>
             </Link>
 
             <Link
               to={`/${user.user.username}`}
-              className="flex flex-col items-center text-gray-600 hover:text-blue-500 transition-colors"
+              className="flex flex-col items-center text-white hover:text-blue-400 transition-all duration-200"
             >
-              <RxAvatar className="text-xl" />
-              <span className="text-xs">Profile</span>
+              <RxAvatar className="text-2xl" />
+              <span className="text-xs mt-1">Profile</span>
             </Link>
           </div>
 
           {/* Right: Logout */}
           <div>
             <button
-              className="flex flex-col items-center text-red-500 hover:text-red-600 transition-colors"
+              className="flex flex-col items-center text-red-500 hover:text-red-400 transition-all duration-200"
               title="Log Out"
               onClick={logout}
             >
-              <FiLogOut className="text-xl" />
-              <span className="text-xs">Log Out</span>
+              <FiLogOut className="text-2xl" />
+              <span className="text-xs mt-1">Log Out</span>
             </button>
           </div>
         </div>
-      )}  
+      )}
     </>
   );
 };

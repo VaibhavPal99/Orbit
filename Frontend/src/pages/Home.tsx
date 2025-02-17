@@ -1,4 +1,4 @@
-import { useRecoilState} from "recoil";
+import { useRecoilState } from "recoil";
 import SuggestedUsers from "../component/SuggestedUsers";
 import useGetBulkUsersDetails from "../hooks/useGetBulkUsersDetails";
 import { useEffect, useState } from "react";
@@ -9,13 +9,10 @@ import { CircularProgress } from "@mui/material";
 import Post from "../component/Post";
 import postsAtom from "../atoms/postsAtom";
 
-
 export const Home = () => {
     const { bulkUser } = useGetBulkUsersDetails();
     const [posts, setPosts] = useRecoilState(postsAtom);
     const [loading, setLoading] = useState<boolean>(true);
-    
-
 
     useEffect(() => {
         const getFeedPosts = async () => {
@@ -35,7 +32,6 @@ export const Home = () => {
                 const filteredPosts = data.filter((post: PostType) =>
                     bulkUser.some((user) => user.id === post.PostedById && !user.isFrozen)
                 );
-                
                 setPosts(filteredPosts);
             } catch (e) {
                 console.error("Error fetching posts:", e);
@@ -46,24 +42,26 @@ export const Home = () => {
     }, [setPosts, bulkUser]);
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-100">
             {/* Main Content Section */}
-            <div className="container mx-auto px-4 py-8">
+            <div className="container mx-auto px-4 py-12">
                 <div className="flex flex-col lg:flex-row-reverse gap-6">
-                    {/* Suggested Users Section */}
-                    <div className="lg:w-1/4 bg-white shadow-lg rounded-lg p-4 h-[80vh] overflow-y-scroll">
-                        <SuggestedUsers />
+                    {/* Suggested Users Section - Sticky */}
+                    <div className="lg:w-1/4 flex-shrink-0 sticky top-12">
+                        <div className="p-6 h-full">
+                            <SuggestedUsers />
+                        </div>
                     </div>
 
-                    {/* Posts Section */}
-                    <div className="flex-1 bg-white shadow-lg rounded-lg p-6 h-[80vh] overflow-y-scroll">
+                    {/* Posts Section - Scrollable */}
+                    <div className="flex-1 p-6 h-[80vh] overflow-y-auto">
                         {loading ? (
                             <div className="flex justify-center items-center h-full">
-                                <CircularProgress />
+                                <CircularProgress className="text-gray-500" />
                             </div>
                         ) : posts.length === 0 ? (
-                            <div className="text-center py-12">
-                                <h1 className="text-2xl font-bold text-gray-700">
+                            <div className="text-center py-16">
+                                <h1 className="text-3xl font-semibold text-gray-700">
                                     Follow some users to see the feed
                                 </h1>
                             </div>

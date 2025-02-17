@@ -104,7 +104,7 @@ const CreatePost = () => {
           onClick={() => setOpen(true)}
           className="fixed bottom-10 right-5 bg-gray-300 p-3 rounded-full"
         >
-          <FaPlus size={24} /> {/* Replace AddIcon with FaPlus */}
+          <FaPlus size={24} style={{ color: "#ff6347" }}/> {/* Replace AddIcon with FaPlus */}
         </Button>
       )}
 

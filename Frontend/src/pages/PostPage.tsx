@@ -31,7 +31,6 @@ export const PostPage = () => {
         });
 
         const data = res.data;
-        console.log("data", data);
         if (data.error) {
           console.error("Error fetching post:", data.error);
           return;
@@ -45,7 +44,6 @@ export const PostPage = () => {
     };
     getPost();
   }, [pid, setPosts]);
-  console.log("currentPost",currentPost);
 
   const handleDeletePost = async () => {
     if (!currentPost) return; // Prevent actions on undefined posts
@@ -102,69 +100,78 @@ export const PostPage = () => {
 
   return (
     <>
-      <div className="flex justify-between">
-        <div className="flex w-full items-center gap-3">
-          <Link to={`/${user.username}`} className="flex items-center">
-            <Avatar
+      <div className="max-w-3xl mx-auto mt-5">
+        {/* Header with Profile Avatar and Username */}
+        <div className="flex items-center justify-between p-4 border-b">
+          <div className="flex items-center gap-3">
+            <Link to={`/${user.username}`} className="flex items-center">
+              <Avatar
                 src={user.profilePic}
                 {...(!user.profilePic || user.profilePic === " " ? stringAvatar(user.name) : {})}
-                className="w-14 h-14"
+                className="w-12 h-12 border-2 border-gray-300"
+              />
+            </Link>
+            <Link to={`/${user.username}`} className="flex items-center gap-2">
+              <p className="text-lg font-semibold text-gray-800">{user.username}</p>
+            </Link>
+          </div>
+          <div className="flex items-center">
+            {currentUser?.id === user.id && (
+              <div onClick={handleDeletePost} className="cursor-pointer">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-red-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Post Text */}
+        <p className="p-4 text-gray-800">{currentPost.text}</p>
+
+        {/* Post Image */}
+        {currentPost.img && (
+          <div className="rounded-md overflow-hidden mb-4">
+            <img
+              src={currentPost.img}
+              alt="Post"
+              className="w-full h-auto object-cover rounded-md"
             />
-          </Link>
-          <Link to={`/${user.username}`} className="flex items-center gap-1">
-            <p className="text-sm font-bold">{user.username}</p>
-            <img src="/verified.png" alt="Verified" className="w-4 h-4 mt-1" />
-          </Link>
+          </div>
+        )}
+
+        {/* Actions like, comment, share */}
+        <div className="flex gap-4 px-4 py-2">
+          <Icons post={currentPost} />
         </div>
 
-        <div className="flex gap-4 items-center">
-          <p className="text-xs text-gray-400 text-right w-36">
-            {formatDistanceToNow(new Date(currentPost.createdAt))} ago
-          </p>
-          {currentUser?.id === user.id && (
-            <div onClick={handleDeletePost} className="cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-red-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </div>
-          )}
+        {/* Time Ago */}
+        <div className="px-4 py-1 text-xs text-gray-400">
+          {formatDistanceToNow(new Date(currentPost.createdAt))} ago
         </div>
+
+        <hr className="my-4 border-gray-300" />
+
+        {/* Comments Section */}
+        {currentPost.replies.map((reply) => (
+          <Comment
+            key={reply.id}
+            reply={reply}
+            lastReply={reply.id === currentPost.replies[currentPost.replies.length - 1].id}
+          />
+        ))}
       </div>
-
-      <p className="my-3">{currentPost.text}</p>
-
-      {currentPost.img && (
-        <div className="rounded-md overflow-hidden border border-gray-200">
-          <img src={currentPost.img} alt="Post" className="w-full" />
-        </div>
-      )}
-
-      <div className="flex gap-3 my-3">
-        <Icons post={currentPost} />
-      </div>
-
-      <hr className="my-4 border-gray-300" />
-
-      {currentPost.replies.map((reply) => (
-        <Comment
-          key={reply.id}
-          reply={reply}
-          lastReply={
-            reply.id === currentPost.replies[currentPost.replies.length - 1].id
-          }
-        />
-      ))}
     </>
   );
 };
