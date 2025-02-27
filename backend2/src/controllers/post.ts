@@ -260,7 +260,9 @@ postRouter.delete('/:id', async (c) => {
     }).$extends(withAccelerate());
     try{
         const ID = c.req.param('id');
+
         const currentUser = c.get('userId');
+
         const post = await prisma.post.findUnique({
             where: {
                 id : ID,
@@ -306,10 +308,25 @@ postRouter.delete('/:id', async (c) => {
                 }   
             }
         }
+
+
+        await prisma.like.deleteMany({
+            where :{
+                postId : post.id
+            }
+        });
+
+        await prisma.reply.deleteMany({
+            where : {
+                postId : post.id
+            }
+        });
         
         await prisma.post.delete({
             where: { id: post.id },
         });
+
+        
 
         c.status(200);
         return c.json({ msg: 'Post deleted successfully.' });

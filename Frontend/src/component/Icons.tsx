@@ -13,8 +13,9 @@ const Icons = ({ post }: IconsProps) => {
     const user = useRecoilValue(userAtom);
     const [posts, setPosts] = useRecoilState(postsAtom);
     const [liked, setLiked] = useState<boolean>(
-        post.likes.some((like) => like.userId === user.user?.id)
+        Array.isArray(post.likes) && user.user ? post.likes.some((like) => like.userId === user.user.id) : false
     );
+    
     const [isLiking, setIsLiking] = useState<boolean>(false);
     const [isReplying, setIsReplying] = useState<boolean>(false);
     const [remainingChar, setRemainingChar] = useState(MAX_CHAR);
@@ -159,9 +160,9 @@ const Icons = ({ post }: IconsProps) => {
 
                 {/* Replies and Likes Count */}
                 <div className="flex">
-                    {post.replies.slice(0, 3).map((reply, index) => (
+                    {post.replies.slice(0, 3).map((reply) => (
                         <Avatar
-                            key={index}
+                            key={reply.id}
                             alt={reply.username}
                             src={reply.userProfilePic}
                             sx={{

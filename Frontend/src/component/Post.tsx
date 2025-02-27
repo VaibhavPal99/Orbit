@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { MouseEventHandler, useEffect, useState } from "react";
-import { formatDistanceToNow } from "date-fns";
+import { format } from "date-fns";
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import postsAtom from "../atoms/postsAtom";
@@ -16,6 +16,7 @@ const Post = ({ post, userId }: UserPagePostProps) => {
   const currentUser = useRecoilValue(userAtom);
   const navigate = useNavigate();
   const [posts, setPosts] = useRecoilState(postsAtom);
+  const date = post.createdAt ? new Date(post.createdAt) : null;
 
   useEffect(() => {
     const getUser = async () => {
@@ -41,6 +42,7 @@ const Post = ({ post, userId }: UserPagePostProps) => {
     if (!window.confirm("Are you sure you want to delete this post?")) return;
 
     try {
+      console.log("alpha postid",post.id);
       await axios.delete(`${BACKEND_URL}/api/v1/post/${post.id}`, {
         headers: {
           Authorization: localStorage.getItem("token"),
@@ -51,6 +53,8 @@ const Post = ({ post, userId }: UserPagePostProps) => {
       console.error("Error deleting post:", error);
     }
   };
+
+  
 
   return (
     <Link to={`/${user.username}/post/${post.id}`} className="block mb-4">
@@ -103,9 +107,13 @@ const Post = ({ post, userId }: UserPagePostProps) => {
               <span className="text-blue-500">✔️</span>
             </div>
             <div className="flex gap-4 items-center">
-              <span className="text-xs text-gray-500">
-                {formatDistanceToNow(new Date(post.createdAt))} ago
-              </span>
+            <div className="text-xs text-gray-500">
+                {date && !isNaN(date.getTime()) ? (
+                  <p>{format(date, "MMM dd, yyyy")}</p>
+                ) : (
+                  <p>Invalid Date</p>
+                )}
+            </div>
               {currentUser.user.id === user.id && (
                 <button
                   className="text-red-500 text-xs"
