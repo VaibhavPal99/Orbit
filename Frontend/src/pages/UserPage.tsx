@@ -11,9 +11,9 @@ import Post from "../component/Post";
 
 export const UserPage: React.FC = () => {
   const { user, loading } = useGetUserProfile();
-  const { username } = useParams();
+  const { username } = useParams<string>();
   const [posts, setPosts] = useRecoilState(postsAtom);
-  const [fetchingPosts, setFetchingPosts] = useState(false);
+  const [fetchingPosts, setFetchingPosts] = useState<boolean>(false);
 
   useEffect(() => {
     const getPosts = async () => {

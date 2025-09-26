@@ -1,0 +1,1 @@
+{"root":["./src/index.ts","./src/controller/message.controller.ts","./src/middleware/verifyJWT.ts","./src/routes/message.routes.ts","./src/types/types.ts"],"version":"5.9.2"}

@@ -8,23 +8,24 @@ datasource db {
 }
 
 model User {
-  id               String    @id @default(uuid())
+  id               String         @id @default(uuid())
   name             String?
   email            String
-  username         String    @unique
+  username         String         @unique
   password         String
   profilePic       String
   bio              String
   isFrozen         Boolean
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  followers        Follow[]  @relation("Following")
-  followings       Follow[]  @relation("Followers")
-  Posts            Post[]    @relation("PostsMade")
-  likedPosts       Like[] // Explicit relation for posts liked by this user
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  followers        Follow[]       @relation("Following")
+  followings       Follow[]       @relation("Followers")
+  Posts            Post[]         @relation("PostsMade")
+  likedPosts       Like[] 
   Reply            Reply[]
-  sentMessages     Message[] @relation("SentMessages")
-  receivedMessages Message[] @relation("ReceivedMessages")
+  sentMessages     Message[]      @relation("SentMessages")
+  receivedMessages Message[]      @relation("ReceivedMessages")
+  conversations    Conversation[] @relation("UserConversations")
 }
 
 model Follow {
@@ -66,12 +67,21 @@ model Reply {
 }
 
 model Message {
-  id         String   @id @default(uuid())
-  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
-  senderId   String
-  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
-  receiverId String
-  content    String
-  createdAt  DateTime @default(now())
-  read       Boolean  @default(false)
+  id             String       @id @default(uuid())
+  conversationId String?
+  conversation   Conversation? @relation(fields: [conversationId], references: [id])
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id])
+  senderId       String
+  receiver       User         @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  receiverId     String
+  content        String
+  createdAt      DateTime     @default(now())
+  read           Boolean      @default(false)
+}
+
+model Conversation {
+  id           String    @id @default(uuid())
+  participants User[]    @relation("UserConversations")
+  messages     Message[]
+  updatedAt    DateTime  @updatedAt
 }
