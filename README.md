@@ -20,11 +20,12 @@ Orbit is a full-stack social media application that enables users to connect, sh
 
 ### Backend:
 - Node.js
-- Hono framework
+- Hono and Express
 - PostgreSQL (NeonDB)
 - Prisma ORM
 - JWT authentication
 - Deployed on **Cloudflare Workers**
+- chat-server deployed on **Render**
 
 ## Installation
 
