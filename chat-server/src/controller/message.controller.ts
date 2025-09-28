@@ -170,9 +170,7 @@ export const getConversations = async (req: AuthRequest, res: Response) => {
                 messages: {
                     orderBy: { createdAt: "asc" }
                 },
-                participants: {
-                    select: { id: true, name: true, profilePic: true }
-                },
+                participants: true,
             },
             orderBy : {
                 updatedAt : "desc"
