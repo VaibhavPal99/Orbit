@@ -9,7 +9,7 @@ const httpServer = http.createServer(app);
 
 
 app.use(cors({
-    origin: ["http://localhost:3000", "https://orbit-blond.vercel.app/"], // frontend URL
+    origin: ["http://localhost:5173", "https://orbit-blond.vercel.app/"], // frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
