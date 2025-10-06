@@ -9,19 +9,20 @@ import CreatePost from "./CreatePost";
 import { FaUserEdit} from "react-icons/fa";
 import { MdOutlineFollowTheSigns } from "react-icons/md";
 
+
+export function stringAvatar(name: string) {
+  const nameParts = name.split(" ");
+  return {
+    children:
+      nameParts.length > 1
+        ? `${nameParts[0][0]}${nameParts[1][0]}`
+        : nameParts[0][0],
+  };
+}
+
 export const UserHeader = ({ user }: IUserHeaderProps) => {
   const currentUser = useRecoilValue(userAtom);
   const { handleFollowUnfollow, updating, following } = useFollowUnfollow(user);
-
-  function stringAvatar(name: string) {
-    const nameParts = name.split(" ");
-    return {
-      children:
-        nameParts.length > 1
-          ? `${nameParts[0][0]}${nameParts[1][0]}`
-          : nameParts[0][0],
-    };
-  }
 
   return (
     <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-8 rounded-2xl shadow-xl max-w-3xl mx-auto mt-10 space-y-6 text-white">

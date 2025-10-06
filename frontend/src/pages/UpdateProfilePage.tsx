@@ -72,6 +72,7 @@ export const UpdateProfilePage = () => {
                 console.log("Error", data.error, "error");
                 return;
             }
+            console.log("userProfilePage",data);
 
             console.log("Success", "Profile updated successfully", "success");
             setUser(data);

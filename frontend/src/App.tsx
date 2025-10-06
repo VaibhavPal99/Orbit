@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 import './index.css'; // or the appropriate path to your CSS file
 import { UpdateProfilePage } from './pages/UpdateProfilePage';
 import SearchPage from './pages/SearchPage';
+import { ChatPage } from './pages/ChatPage';
 
 
 
@@ -30,7 +31,7 @@ const App = () => {
   return (
     <div>
        
-        <Header></Header>
+      <Header></Header>
       <Routes>
             <Route path="/auth" element={<Auth></Auth>}> </Route>
             <Route
@@ -66,8 +67,14 @@ const App = () => {
             />
             <Route
               path="/search"
-              element={user ? <SearchPage /> : <Navigate to={"/auth"} />}
+              element={user ? <SearchPage page="searchPage" /> : <Navigate to={"/auth"} />}
             />
+            
+            <Route 
+            path="/chat"
+            element={user ? <ChatPage user={user.user} /> : <Navigate to={"/auth"} />}
+            />
+  
       </Routes>
         
     </div>
