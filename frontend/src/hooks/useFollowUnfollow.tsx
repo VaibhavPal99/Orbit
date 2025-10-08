@@ -1,15 +1,16 @@
-    import { useRecoilValue } from "recoil";
+    import { useRecoilValue, useSetRecoilState } from "recoil";
     import { IUser } from "./useGetBulkUsersDetails";
     import userAtom from "../atoms/userAtom";
     import { useState } from "react";
     import { BACKEND_URL } from "../config";
     import axios from "axios";
+import bulkUserAtom from "../atoms/bulkUserAtom";
 
 
     export const useFollowUnfollow = (user : IUser) => {
         
         const currentUser = useRecoilValue(userAtom);
-      
+        const setBulkUser = useSetRecoilState(bulkUserAtom);
         const [updating, setUpdating] = useState<boolean>(false);
         const [following, setFollowing] = useState<boolean>(
             Array.isArray(user.followers) &&
@@ -68,6 +69,13 @@
                             severity: 'success',
                         });
                     }
+
+                    const bulkRes = await axios.get(`${BACKEND_URL}/api/v1/user/bulk`, {
+                        headers: {
+                            Authorization: localStorage.getItem("token"),
+                        },
+                    });
+                    setBulkUser(bulkRes.data);
         
                     setFollowing(!following);
                 } else {

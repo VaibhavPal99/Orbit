@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
 import { BACKEND_URL } from "../config";
+import { useRecoilState } from "recoil";
+import bulkUserAtom from "../atoms/bulkUserAtom";
 
 export interface IUser{
     id : string;
@@ -16,9 +18,16 @@ export interface IUser{
     followings : { id: string; followerId: string; followingId: string }[];
 }
 
+export interface IBulkUser{
+    id : string;
+    followerId : string;
+    followingId : string;
+    following : IUser;
+}
+
 const useGetBulkUsersDetails = () => {
 
-    const [bulkUser, setBulkUser] = useState<IUser[]>([]);
+    const [bulkUser, setBulkUser] = useRecoilState(bulkUserAtom);
     const [bulkUserLoading,setBulkUserLoading] = useState<boolean>();
 
     useEffect(()=> {

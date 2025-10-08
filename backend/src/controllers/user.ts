@@ -476,31 +476,44 @@ userRouter.get('/bulk', async (c) => {
         datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate());
 
-    const query = c.req.query();
+    // const query = c.req.query();
 
-    const filter = query.filter || "";
+    const currentUserId = c.get('userId');
+
+    // const filter = query.filter || "";
     try{
-        const users = await prisma.user.findMany({
-            where: {
-              username: {
-                contains: filter, // Use 'contains' for case-insensitive partial matching
-                mode: 'insensitive', // This makes the filter case-insensitive
-              },
-            },
-            select: {
-              id: true,
-              name : true,
-              username: true,
-              email: true, 
-              profilePic: true,
-              bio: true,
-              isFrozen: true,
-              followers: true,
-              followings: true,
-            },
-          });
+        // const users = await prisma.user.findMany({
+        //     where: {
+        //       username: {
+        //         contains: filter, // Use 'contains' for case-insensitive partial matching
+        //         mode: 'insensitive', // This makes the filter case-insensitive
+        //       },
+        //     },
+        //     select: {
+        //       id: true,
+        //       name : true,
+        //       username: true,
+        //       email: true, 
+        //       profilePic: true,
+        //       bio: true,
+        //       isFrozen: true,
+        //       followers: true,
+        //       followings: true,
+        //     },
+        //   });
 
-        return c.json(users, 200);
+        // return c.json(users, 200);
+
+
+        const users = await prisma.follow.findMany({
+            where :{
+                followerId : currentUserId
+            },
+            include : {
+                following : true,
+            }
+        })
+        return c.json(users,200);
     }catch(e){
         console.error(e); // Log error for debugging
         return c.json({ error: "No User Found" }, 500);

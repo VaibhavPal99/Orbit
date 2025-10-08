@@ -1,13 +1,13 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import useGetBulkUsersDetails, { IUser } from "../hooks/useGetBulkUsersDetails";
+import useGetBulkUsersDetails, { IBulkUser} from "../hooks/useGetBulkUsersDetails";
 import FollowerAndFollowingContainer from "./FollowerAndFollowingContainer";
 import { useGetUserProfile } from "../hooks/useGetUserProfile";
 
 const Followings = () => {
   const { user, loading } = useGetUserProfile();
   const { bulkUser, bulkUserLoading } = useGetBulkUsersDetails();
-  const [following, setFollowing] = useState<IUser[]>([]);
+  const [following, setFollowing] = useState<IBulkUser[]>([]);
   const [loadingFollowings, setLoadingFollowings] = useState<boolean>(true);
 
   useEffect(() => {
@@ -17,9 +17,9 @@ const Followings = () => {
       try {
         if (user && bulkUser) {
           const followingsList = bulkUser.filter((u) =>
-            user.followings.some((f) => f.followingId === u.id) &&
-            u.id !== user.id &&
-            u.isFrozen === false
+            user.followings.some((f) => f.followingId === u.following.id) &&
+            u.following.id !== user.id &&
+            u.following.isFrozen === false
           );
 
           setFollowing(followingsList);
@@ -62,7 +62,7 @@ const Followings = () => {
           <Stack spacing={3}>
             {following &&
               following.map((u) => (
-                <FollowerAndFollowingContainer key={u.id} user={u} />
+                <FollowerAndFollowingContainer key={u.following.id} user={u.following} />
               ))}
           </Stack>
         </Box>
