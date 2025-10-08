@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import useGetBulkUsersDetails, { IUser } from "../hooks/useGetBulkUsersDetails";
+import useGetBulkUsersDetails, { IBulkUser } from "../hooks/useGetBulkUsersDetails";
 import { Box, Stack, Typography } from "@mui/material";
 import { useGetUserProfile } from "../hooks/useGetUserProfile";
 import FollowerAndFollowingContainer from "./FollowerAndFollowingContainer";
@@ -7,7 +7,7 @@ import FollowerAndFollowingContainer from "./FollowerAndFollowingContainer";
 const Followers = () => {
   const { user, loading } = useGetUserProfile();
   const { bulkUser, bulkUserLoading } = useGetBulkUsersDetails();
-  const [followers, setFollowers] = useState<IUser[]>([]);
+  const [followers, setFollowers] = useState<IBulkUser[]>([]);
   const [loadingFollowers, setLoadingFollowers] = useState<boolean>(true);
 
   useEffect(() => {
@@ -19,9 +19,9 @@ const Followers = () => {
           const followerIds = user.followers.map((f) => f.followerId);
           
           const followersList = bulkUser.filter((u) =>
-            followerIds.includes(u.id) &&
-            u.id !== user.id &&
-            u.isFrozen === false
+            followerIds.includes(u.following.id) &&
+            u.following.id !== user.id &&
+            u.following.isFrozen === false
           );
           
           setFollowers(followersList);
@@ -67,7 +67,7 @@ const Followers = () => {
             <Box className="max-h-[400px] overflow-y-auto mt-4 ml-36">
               <Stack spacing={3}>
                 {followers.map((u) => (
-                  <FollowerAndFollowingContainer key={u.id} user={u} />
+                  <FollowerAndFollowingContainer key={u.following.id} user={u.following} />
                 ))}
               </Stack>
             </Box>

@@ -510,7 +510,12 @@ userRouter.get('/bulk', async (c) => {
                 followerId : currentUserId
             },
             include : {
-                following : true,
+                following : {
+                  include : {
+                    followers : true,
+                    followings : true
+                  }
+                }
             }
         })
         return c.json(users,200);
