@@ -140,7 +140,14 @@ userRouter.post('/signup', async (c) =>{
            profilePic : true,
            followers: {
             include : {
-                follower : true
+                follower : {
+                    select : {
+                        id : true,
+                        name : true,
+                        username : true,
+                        profilePic : true
+                    }
+                }
             }
            },
            followings : true,
@@ -200,7 +207,14 @@ userRouter.post('/signin',async (c) => {
             profilePic : true,
             followers: {
                 include : {
-                    follower : true
+                    follower : {
+                        select : {
+                            id : true,
+                            name : true,
+                            username : true,
+                            profilePic : true
+                        }
+                    }
                 }
             },
             followings : true,
