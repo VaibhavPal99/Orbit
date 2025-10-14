@@ -23,7 +23,7 @@ const Followers = () => {
           const thisUser = currentUser.user;
           console.log("thisUser", thisUser);
           
-          const followersList = thisUser.followers.map( u => u.follower );
+          const followersList = thisUser.followers.map( (u : any) => u.follower );
           setFollowers(followersList);
         }
       } catch (error) {

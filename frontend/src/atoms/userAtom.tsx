@@ -1,7 +1,7 @@
 import { atom } from "recoil";
-import { IUserUser } from "../types/types";
 
-export const userAtom = atom<IUserUser>({
+
+export const userAtom = atom({
     key : "userAtom",
     default : JSON.parse(localStorage.getItem("user-info") as string),
 })

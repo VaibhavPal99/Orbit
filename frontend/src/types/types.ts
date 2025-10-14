@@ -1,8 +1,5 @@
 import { IUser } from "../hooks/useGetBulkUsersDetails";
 
-export interface IUserUser{
-    user : IUser
-}
 
 export interface PostType {
 
