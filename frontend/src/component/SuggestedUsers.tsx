@@ -19,7 +19,7 @@ export const SuggestedUsers = () => {
           },
         });
 
-        setSuggestedUsers(res.data); // Directly access parsed JSON data
+        setSuggestedUsers(res.data); 
       } catch (error) {
         console.error("Failed to fetch suggested users:", error);
       } finally {
@@ -34,7 +34,6 @@ export const SuggestedUsers = () => {
     <div className="p-4">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">Suggested Users</h2>
 
-      {/* Displaying suggested users or loading skeletons */}
       <div>
         {!loading ? (
           suggestedUsers.map((user) => (

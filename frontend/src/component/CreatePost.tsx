@@ -71,7 +71,6 @@ const CreatePost = () => {
 
       alert("Success: Post created successfully"); // Replace toast with alert
       if (username === user.user.username) {
-        console.log("alpha data", data);
         setPosts([data, ...posts]);
       }
       setOpen(false);

@@ -14,7 +14,7 @@ export const FollowerAndFollowingContainer = ({
   const { handleFollowUnfollow, updating, following } = useFollowUnfollow(user);
   const currentUser = useRecoilValue(userAtom);
 
-  console.log(currentUser.user.id,user.id);
+
   return (
     <>
       <Box display="flex" justifyContent="space-between" width="400px">

@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 import useGetBulkUsersDetails, { IBulkUser} from "../hooks/useGetBulkUsersDetails";
 import FollowerAndFollowingContainer from "./FollowerAndFollowingContainer";
 import { useGetUserProfile } from "../hooks/useGetUserProfile";
+// import { useRecoilValue } from "recoil";
 
 const Followings = () => {
   const { user, loading } = useGetUserProfile();
   const { bulkUser, bulkUserLoading } = useGetBulkUsersDetails();
   const [following, setFollowing] = useState<IBulkUser[]>([]);
   const [loadingFollowings, setLoadingFollowings] = useState<boolean>(true);
+  // const currentUser = useRecoilValue(userAtom);
 
   useEffect(() => {
     const getFollowings = async () => {
@@ -23,8 +25,6 @@ const Followings = () => {
           );
 
           setFollowing(followingsList);
-          console.log("User:", user);
-          console.log("Following List:", followingsList);
         }
       } catch (error) {
         console.error("Error while fetching followings", error);

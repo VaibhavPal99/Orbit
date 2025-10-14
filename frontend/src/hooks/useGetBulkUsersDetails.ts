@@ -14,7 +14,7 @@ export interface IUser{
     bio : string;
     isFrozen : boolean;
     createdAt : string;
-    followers : { id: string; followerId: string; followingId: string }[];
+    followers : { id: string; followerId: string; followingId: string; follower : IUser }[];
     followings : { id: string; followerId: string; followingId: string }[];
 }
 

@@ -51,7 +51,6 @@ export const ChatPage = (user: IUserHeaderProps) => {
         fetchConversations();
     }, [currentUser.user.id]);
 
-    console.log("chatUsers", chatUsers);
 
     const formatTimestamp = (timestamp: string | undefined) => {
         if (!timestamp) return "";

@@ -138,7 +138,11 @@ userRouter.post('/signup', async (c) =>{
            bio : true,
            isFrozen : true,
            profilePic : true,
-           followers: true,
+           followers: {
+            include : {
+                follower : true
+            }
+           },
            followings : true,
 
         }
@@ -194,7 +198,11 @@ userRouter.post('/signin',async (c) => {
             bio : true,
             isFrozen : true,
             profilePic : true,
-            followers: true,
+            followers: {
+                include : {
+                    follower : true
+                }
+            },
             followings : true,
         }
 
@@ -515,7 +523,7 @@ userRouter.get('/bulk', async (c) => {
                     followers : true,
                     followings : true
                   }
-                }
+                },
             }
         })
         return c.json(users,200);

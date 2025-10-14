@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
-import useGetBulkUsersDetails, { IBulkUser } from "../hooks/useGetBulkUsersDetails";
+import useGetBulkUsersDetails, { IUser } from "../hooks/useGetBulkUsersDetails";
 import { Box, Stack, Typography } from "@mui/material";
 import { useGetUserProfile } from "../hooks/useGetUserProfile";
 import FollowerAndFollowingContainer from "./FollowerAndFollowingContainer";
+import { useRecoilValue } from "recoil";
+import userAtom from "../atoms/userAtom";
 
 const Followers = () => {
   const { user, loading } = useGetUserProfile();
   const { bulkUser, bulkUserLoading } = useGetBulkUsersDetails();
-  const [followers, setFollowers] = useState<IBulkUser[]>([]);
+  const [followers, setFollowers] = useState<IUser[]>([]);
   const [loadingFollowers, setLoadingFollowers] = useState<boolean>(true);
+  const currentUser = useRecoilValue(userAtom);
 
   useEffect(() => {
     const getFollowers = async () => {
@@ -16,14 +19,11 @@ const Followers = () => {
 
       try {
         if (user && bulkUser && Array.isArray(user.followers)) {
-          const followerIds = user.followers.map((f) => f.followerId);
+
+          const thisUser = currentUser.user;
+          console.log("thisUser", thisUser);
           
-          const followersList = bulkUser.filter((u) =>
-            followerIds.includes(u.following.id) &&
-            u.following.id !== user.id &&
-            u.following.isFrozen === false
-          );
-          
+          const followersList = thisUser.followers.map( u => u.follower );
           setFollowers(followersList);
         }
       } catch (error) {
@@ -67,7 +67,7 @@ const Followers = () => {
             <Box className="max-h-[400px] overflow-y-auto mt-4 ml-36">
               <Stack spacing={3}>
                 {followers.map((u) => (
-                  <FollowerAndFollowingContainer key={u.following.id} user={u.following} />
+                  <FollowerAndFollowingContainer key={u.id} user={u} />
                 ))}
               </Stack>
             </Box>

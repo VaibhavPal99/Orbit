@@ -42,7 +42,6 @@ const Post = ({ post, userId }: UserPagePostProps) => {
     if (!window.confirm("Are you sure you want to delete this post?")) return;
 
     try {
-      console.log("alpha postid",post.id);
       await axios.delete(`${BACKEND_URL}/api/v1/post/${post.id}`, {
         headers: {
           Authorization: localStorage.getItem("token"),

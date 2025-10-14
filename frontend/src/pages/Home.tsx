@@ -15,36 +15,34 @@ export const Home = () => {
     const [posts, setPosts] = useRecoilState(postsAtom);
     const [loading, setLoading] = useState<boolean>(true);
 
-    const fetchFeedPosts = async () => {
-        setLoading(true);
-        try {
-            const res = await axios.get(`${BACKEND_URL}/api/v1/post/feed`, {
-                headers: {
-                    Authorization: localStorage.getItem("token"),
-                },
-            });
-            const data = res.data;
-            if (data.error) {
-                console.error("An error occurred while fetching the feed");
-                return;
-            }
-            
-            const filteredPosts = data.filter((post: PostType) =>
-                bulkUser.some((user) => user.following.id === post.PostedById && !user.following.isFrozen)
-            );
-            setPosts(filteredPosts);
-        } catch (e) {
-            console.error("Error fetching posts:", e);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
-        if (bulkUser.length > 0) {
-            fetchFeedPosts();
-        }
+        const getFeedPosts = async () => {
+            setLoading(true);
+
+            try {
+                const res = await axios.get(`${BACKEND_URL}/api/v1/post/feed`, {
+                    headers: {
+                        Authorization: localStorage.getItem("token"),
+                    },
+                });
+                const data = res.data;
+                if (data.error) {
+                    console.error("An error occurred while fetching the feed");
+                    return;
+                }
+                const filteredPosts = data.filter((post: PostType) =>
+                    bulkUser.some((user) => user.following.id === post.PostedById && !user.following.isFrozen)
+                );
+                setPosts(filteredPosts);
+            } catch (e) {
+                console.error("Error fetching posts:", e);
+            }
+            setLoading(false);
+        };
+        getFeedPosts();
     }, [bulkUser]);
+    console.log(bulkUser);
+
 
 
     return (
