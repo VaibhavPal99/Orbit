@@ -102,8 +102,8 @@ export const ChatPage = (user: IUserHeaderProps) => {
 
     return (
         <>
-            <div className="grid grid-cols-4 h-screen">
-                <div className="col-span-1 border-r border-gray-300 flex flex-col h-screen bg-white">
+            <div className="grid grid-cols-4 h-[calc(100vh-76px)] overflow-hidden min-h-0">
+                <div className="col-span-1 border-r border-gray-300 flex flex-col bg-white min-h-0">
                     {/* Header Section */}
                     <div className="p-4 border-b border-gray-300">
                         <div className="flex items-center space-x-3">
@@ -210,9 +210,9 @@ export const ChatPage = (user: IUserHeaderProps) => {
                     </div>
                 </div>
 
-                <div className="col-span-3 bg-gray-50ul">
+                <div className="col-span-3 h-full overflow-hidden min-h-0 bg-gray-50ul">
                     {activeChatUser ? (
-                            <div className="col-span-3">
+                            <div className="col-span-3 h-full overflow-hidden">
                                 <SingleConversation selectedUser={activeChatUser} />
                             </div>
                     ) : (

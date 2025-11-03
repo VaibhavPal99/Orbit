@@ -9,6 +9,7 @@ import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { useWebSocket } from "../context/WebSocketProvider";
 
+
 interface Message {
   id?: string;
   content: string;
@@ -28,6 +29,7 @@ export const SingleConversation = ({ selectedUser }: SingleConversationProps) =>
   const [newMessage, setNewMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  // const [newMsgCount, setNewMsgCount] = useState(Number);
 
   // Fetch messages when selected user changes
   useEffect(() => {
@@ -159,7 +161,7 @@ export const SingleConversation = ({ selectedUser }: SingleConversationProps) =>
   const groupedMessages = groupMessagesByDate();
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col bg-gray-50 h-full overflow-hidden min-h-0">
       {/* Header */}
       <div className="bg-white border-b p-4 flex items-center gap-3 shadow-sm">
         {selectedUser.profilePic ? (
@@ -174,7 +176,7 @@ export const SingleConversation = ({ selectedUser }: SingleConversationProps) =>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 p-4 space-y-4 overflow-y-auto">
         {isLoading ? (
           <p className="text-center text-gray-400">Loading messages...</p>
         ) : messages.length === 0 ? (
@@ -197,8 +199,14 @@ export const SingleConversation = ({ selectedUser }: SingleConversationProps) =>
                       }`}
                     >
                       <p className="text-sm break-words">{msg.content}</p>
-                      <div className={`text-xs mt-1 ${isSender ? "text-teal-100" : "text-gray-500"}`}>
+                      <div className={`text-xs mt-1 flex items-center gap-1 ${isSender ? "text-teal-100" : "text-gray-500"}`}>
                         {formatTime(msg.createdAt)}
+                        {isSender && (
+                          <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M2.2 12.6l1.4-1.4 3.6 3.6 8-8 1.4 1.4-9.4 9.4-5-5z"/>
+                          <path d="M8.9 12.6l1.4-1.4 3.6 3.6 6.3-6.3 1.4 1.4-7.7 7.7-5-5z"/>
+                          </svg>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -211,14 +219,14 @@ export const SingleConversation = ({ selectedUser }: SingleConversationProps) =>
       </div>
 
       {/* Input */}
-      <div className="bg-white border-t p-4 flex items-center gap-3">
+      <div className="bg-white border-t p-4 flex items-center border-gray-300 gap-3">
         <input
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={handleKeyPress}
           placeholder="Type a message..."
-          className="flex-1 px-4 py-2 border rounded-full focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+          className="flex-1 px-4 py-2 border rounded-full focus:outline-none border-gray-400"
         />
         <button
           onClick={handleSendMessage}
