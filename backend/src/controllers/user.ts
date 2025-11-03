@@ -498,10 +498,10 @@ userRouter.get('/bulk', async (c) => {
         datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate());
 
-    // const query = c.req.query();
+
 
     const currentUserId = c.get('userId');
-
+        // const query = c.req.query();
     // const filter = query.filter || "";
     try{
         // const users = await prisma.user.findMany({
@@ -544,6 +544,39 @@ userRouter.get('/bulk', async (c) => {
     }catch(e){
         console.error(e); // Log error for debugging
         return c.json({ error: "No User Found" }, 500);
+    }
+})
+
+userRouter.get('/search', async (c) => {
+
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
+
+    const query = c.req.query();
+    const filter = query.filter || "";
+    try{
+    const users = await prisma.user.findMany({
+            where: {
+              username: {
+                contains: filter, // Use 'contains' for case-insensitive partial matching
+                mode: 'insensitive', // This makes the filter case-insensitive
+              },
+            },
+            select: {
+              id: true,
+              name : true,
+              username: true, 
+              profilePic: true,
+              isFrozen : true
+            },
+          });
+
+        return c.json(users, 200);
+    }catch(e){
+        console.error(e); 
+        return c.json({ error: "No User Found" }, 500);
+
     }
 })
 

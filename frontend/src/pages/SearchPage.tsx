@@ -22,7 +22,7 @@ const SearchPage = ({ page, onUserSelect }: { page: string; onUserSelect? : (use
     const fetchFilteredUsers = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`${BACKEND_URL}/api/v1/user/bulk`, {
+        const res = await axios.get(`${BACKEND_URL}/api/v1/user/search`, {
           params: { filter },
           headers: {
             Authorization: localStorage.getItem("token") ?? "",
@@ -34,12 +34,12 @@ const SearchPage = ({ page, onUserSelect }: { page: string; onUserSelect? : (use
           console.error("Error fetching users.");
           return;
         }
-
+        console.log(data);
         data = data.filter(
           (user: IUser) =>
             user.id !== currentUser.id && user.isFrozen === false
         );
-
+   
         setUsers(data);
       } catch (error) {
         console.error("Error fetching users:", error);
