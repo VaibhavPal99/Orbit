@@ -115,6 +115,7 @@ const Icons = ({ post }: IconsProps) => {
             setRemainingChar(MAX_CHAR - inputText.length);
         }
     };
+    console.log("Replies", post.replies);
 
     return (
         <div>

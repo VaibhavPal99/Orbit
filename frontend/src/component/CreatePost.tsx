@@ -4,7 +4,7 @@ import { BsFillImageFill } from "react-icons/bs"; // Add this line to fix the im
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import postsAtom from "../atoms/postsAtom";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Input, TextareaAutosize } from "@mui/material";
 import usePreviewImg from "../hooks/usePreviewImg";
 import axios from "axios";
@@ -22,6 +22,7 @@ const CreatePost = () => {
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useRecoilState(postsAtom);
   const { username } = useParams();
+  const navigate = useNavigate();
 
   const convertFileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -69,6 +70,7 @@ const CreatePost = () => {
         return;
       }
 
+
       alert("Success: Post created successfully"); // Replace toast with alert
       if (username === user.user.username) {
         setPosts([data, ...posts]);
@@ -77,6 +79,8 @@ const CreatePost = () => {
       setPostText("");
       setImgUrl("");
       setRemainingChar(MAX_CHAR);
+      
+      navigate(`/${user.user.username}/post/${data.newPost.id}`);
 
     } catch (error) {
       alert("Error: Failed to create a post"); // Replace toast with alert
@@ -84,6 +88,8 @@ const CreatePost = () => {
       setLoading(false);
     }
   };
+
+  
   
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
